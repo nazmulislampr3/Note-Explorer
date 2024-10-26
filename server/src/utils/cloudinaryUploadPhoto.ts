@@ -7,10 +7,10 @@ const cloudinaryUploadPhoto = async (
   cloudinaryFolder: string,
   file: Express.Multer.File
 ): Promise<CloudinaryImage> => {
-  await resizeAndCompressImage(file, {
-    maxWidth: 600,
-    maxSize: 300,
-  });
+  // await resizeAndCompressImage(file, {
+  //   maxWidth: 600,
+  //   maxSize: 300,
+  // });
 
   const { url, public_id } = await cloudinary.uploader.upload(file?.path!, {
     folder: `note-explorer/${cloudinaryFolder}`,
