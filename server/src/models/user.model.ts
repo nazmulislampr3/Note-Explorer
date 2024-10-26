@@ -1,9 +1,8 @@
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { model, Schema } from "mongoose";
 import { DB_User } from "../types";
-import bcrypt from "bcrypt";
 import cleanMongooseDocument from "../utils/cleanMongooseDocument";
-import jwt from "jsonwebtoken";
-import imageSchema from "./image.model.schema";
 
 const userSchema = new Schema<DB_User>(
   {
@@ -24,20 +23,12 @@ const userSchema = new Schema<DB_User>(
       required: true,
     },
     recoveryEmail: String,
-    avatar: {
-      enum: [
-        {
-          url: String,
-          public_id: String,
-        },
-        String,
-      ],
-    },
+    avatar: String,
     password: {
       type: String,
       required: true,
     },
-    refreshToken: String,
+    refreshToken: [String],
   },
   { timestamps: true, versionKey: false }
 );

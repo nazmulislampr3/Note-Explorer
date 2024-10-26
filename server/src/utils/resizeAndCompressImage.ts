@@ -1,9 +1,9 @@
 import sharp from "sharp";
 
-interface ResizeCompressOptions {
+type ResizeCompressOptions = {
   maxWidth?: number;
   maxSize?: number; //kb
-}
+};
 
 async function resizeAndCompressImage(
   file: Express.Multer.File,

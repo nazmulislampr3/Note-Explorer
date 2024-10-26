@@ -9,9 +9,9 @@ export interface DB_User extends Document {
   birthdate: Date;
   email: string;
   recoveryEmail?: string;
-  avatar?: CloudinaryImage | string;
+  avatar?: string;
   password: string;
-  refreshToken?: string;
+  refreshToken?: string[];
   matchPassword: (password: string) => Promise<any>;
   generateAccessToken: () => string;
   generateRefreshToken: () => string;

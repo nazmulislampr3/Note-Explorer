@@ -5,14 +5,9 @@ import { OtpOrToken } from "../models/OtpOrToken.model";
 import { User } from "../models/user.model";
 import ApiError from "../utils/ApiError";
 import asyncHandler from "../utils/asyncHandler";
+import cloudinaryUploadPhoto from "../utils/cloudinaryUploadPhoto";
 import generateOTP from "../utils/generateOTP";
 import maskEmail from "../utils/maskEmail";
-import cloudinary from "../utils/cloudinary";
-import { DB_User } from "../types";
-import resizeAndCompressImage from "../utils/resizeAndCompressImage";
-import fs from "fs/promises";
-import path from "path";
-import cloudinaryUploadPhoto from "../utils/cloudinaryUploadPhoto";
 
 export const register = asyncHandler(async (req, res) => {
   const { email } = req.body;
@@ -114,6 +109,10 @@ export const login = asyncHandler(async (req, res) => {
 
   const accessToken = user.generateAccessToken();
   const refreshToken = user.generateRefreshToken();
+
+  user.refreshToken = [...(user.refreshToken || []), refreshToken];
+
+  await user.save();
 
   const options: CookieOptions = {
     httpOnly: true,
@@ -312,12 +311,12 @@ export const updateAvatar = asyncHandler(async (req, res) => {
   if (!req.file) {
     throw new ApiError(400, "No file uploaded.");
   }
-  const { url, public_id } = await cloudinaryUploadPhoto("avatars", req.file!);
+  const url = await cloudinaryUploadPhoto("avatars", req.file!);
 
   // // req.user!.avatar = { url, public_id };
   // // await req.user!.save({ validateBeforeSave: false });
 
-  return res.json({ avatar: { url, public_id } });
+  return res.json({ avatar: url });
 });
 
 export const changePassword = asyncHandler(async (req, res) => {
