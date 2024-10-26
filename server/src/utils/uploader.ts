@@ -1,30 +1,21 @@
-import multer from "multer";
-import { FileTypes, ImageMimeType } from "../types";
-import path from "path";
+import multer, { memoryStorage } from "multer";
+import { FileTypes } from "../types";
+import ApiError from "./ApiError";
 
-const storage = (fileType: FileTypes) =>
-  multer.diskStorage({
-    destination: (req, file, callback) => {
-      let error: Error | null = null;
-      if (fileType === "image" && !(file.mimetype as ImageMimeType)) {
-        error = {
-          message: "Invalid image.",
-          name: "Image input error.",
-        };
-      }
+const fileFilter = (fileType?: any) => {
+  return (
+    req: any,
+    file: Express.Multer.File,
+    callback: multer.FileFilterCallback
+  ) => {
+    if (fileType && !file.mimetype.startsWith(fileType)) {
+      return callback(null, false);
+    }
+    callback(null, true);
+  };
+};
 
-      const pathName = path.join(__dirname, "./../../public/uploads");
-      callback(error, pathName);
-    },
-    filename: (req, file, callback) => {
-      const [name, extension] = file.originalname.split(".");
-
-      const filename = `${name.replace(
-        "-",
-        "_"
-      )}_${new Date().getTime()}.${extension}`;
-      callback(null, filename);
-    },
-  });
-
-export const uploadImage = multer({ storage: storage("image") });
+export const uploadImage = multer({
+  storage: memoryStorage(),
+  fileFilter: fileFilter("image"),
+});

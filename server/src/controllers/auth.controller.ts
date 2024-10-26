@@ -309,6 +309,9 @@ export const updateUserInfo = asyncHandler(async (req, res) => {
 });
 
 export const updateAvatar = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    throw new ApiError(400, "No file uploaded.");
+  }
   const { url, public_id } = await cloudinaryUploadPhoto("avatars", req.file!);
 
   // // req.user!.avatar = { url, public_id };
