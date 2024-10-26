@@ -32,6 +32,10 @@ const errorHandler = (
     return res.status(400).json(errObj);
   }
 
+  if (err instanceof MulterError) {
+    return res.status(400).json({ message: `Multer error: ${err.message}` });
+  }
+
   console.log({ err });
 
   return res
