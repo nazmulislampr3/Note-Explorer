@@ -12,9 +12,5 @@
       "src": "/(.*)",
       "dest": "server/index.ts"
     }
-  ],
-  "env": {
-    "MONGODB_URI": "@mongo_uri",
-    "NODE_ENV": "production"
-  }
+  ]
 }
