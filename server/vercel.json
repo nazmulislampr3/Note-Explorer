@@ -4,7 +4,15 @@
     {
       "src": "src/index.ts",
       "use": "@vercel/node",
-      "config": { "includeFiles": ["**/*.ts", "package.json", "tsconfig.json"] }
+      "config": {
+        "includeFiles": [
+          "**/*.ts",
+          "package.json",
+          "tsconfig.json",
+          "public/uploads/*",
+          "public/compressed/*"
+        ]
+      }
     }
   ],
   "routes": [
