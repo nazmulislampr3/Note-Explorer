@@ -1,5 +1,6 @@
 import multer from "multer";
 import { FileTypes, ImageMimeType } from "../types";
+import path from "path";
 
 const storage = (fileType: FileTypes) =>
   multer.diskStorage({
@@ -12,7 +13,8 @@ const storage = (fileType: FileTypes) =>
         };
       }
 
-      callback(error, `./public/uploads`);
+      const pathName = path.join(__dirname, "./../../public/uploads");
+      callback(error, pathName);
     },
     filename: (req, file, callback) => {
       const [name, extension] = file.originalname.split(".");
