@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // The JavaScript version to compile down to
+    "module": "CommonJS", // Node.js uses CommonJS
+    "rootDir": "./src", // Root directory of source files
+    "outDir": "./dist", // Output directory after compilation
+    "esModuleInterop": true, // Allows import/export between CommonJS and ES Modules
+    "strict": true, // Enable all strict type-checking options
+    "moduleResolution": "node", // Resolve modules like Node.js
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src"], // Include files in the src directory
+  "exclude": ["node_modules"] // Exclude node_modules folder
+}
