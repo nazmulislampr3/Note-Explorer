@@ -1,8 +1,8 @@
 import cors from "cors";
 import express from "express";
-import errorHandler from "middlewares/errorHandler.middleware";
+import errorHandler from "./middlewares/errorHandler.middleware";
 // import routers from "routes/index";
-import asyncHandler from "utils/asyncHandler";
+import asyncHandler from "./utils/asyncHandler";
 
 const app = express();
 
