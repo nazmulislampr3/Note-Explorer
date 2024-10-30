@@ -1,8 +1,8 @@
 import cors from "cors";
 import express from "express";
-import errorHandler from "./middlewares/errorHandler.middleware.js";
-import routers from "./routes/index.js";
-import asyncHandler from "./utils/asyncHandler.js";
+import errorHandler from "./middlewares/errorHandler.middleware";
+import routers from "./routes/index";
+import asyncHandler from "./utils/asyncHandler";
 // import { accountRecoverOTPMail } from "./utils/mailer/mails";
 // import sendMail from "./utils/mailer/sendMail";
 // (async () => {

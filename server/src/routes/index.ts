@@ -1,8 +1,8 @@
 import { Router } from "express";
-import authRouter from "./auth.route.js";
-import uploadRouter from "./upload.route.js";
-import noteRouter from "./noteRoutes.js";
-import requireAuth from "../middlewares/requireAuth.middleware.js";
+import authRouter from "./auth.route";
+import uploadRouter from "./upload.route";
+import noteRouter from "./noteRoutes";
+import requireAuth from "../middlewares/requireAuth.middleware";
 const router = Router();
 
 router.use("/auth", authRouter);

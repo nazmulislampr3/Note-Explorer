@@ -1,5 +1,5 @@
 import { model, Schema, Types } from "mongoose";
-import cleanMongooseDocument from "../utils/cleanMongooseDocument.js";
+import cleanMongooseDocument from "../utils/cleanMongooseDocument";
 
 const noteSchema = new Schema(
   {

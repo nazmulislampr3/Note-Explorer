@@ -1,6 +1,6 @@
-import { ResizeCompressOptions } from "../types.js";
-import asyncHandler from "../utils/asyncHandler.js";
-import uploadPhoto from "../utils/cloudinary/uploadPhoto.cloudinary.js";
+import { ResizeCompressOptions } from "../types";
+import asyncHandler from "../utils/asyncHandler";
+import uploadPhoto from "../utils/cloudinary/uploadPhoto.cloudinary";
 
 export const uploadImage = (
   folder: string,

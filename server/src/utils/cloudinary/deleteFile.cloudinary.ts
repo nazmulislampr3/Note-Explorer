@@ -1,4 +1,4 @@
-import cloudinary from "./cloudinary.js";
+import cloudinary from "./cloudinary";
 
 const deleteFile = async (url: string) => {
   const isCloudinaryFile = url.includes("res.cloudinary.com");

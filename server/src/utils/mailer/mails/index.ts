@@ -1,5 +1,5 @@
-import extractMail from "../extractMail.mailer.js";
-import OTPMail from "./OTPMail.js";
+import extractMail from "../extractMail.mailer";
+import OTPMail from "./OTPMail";
 
 export const registerOTPMail = async ({
   otp,

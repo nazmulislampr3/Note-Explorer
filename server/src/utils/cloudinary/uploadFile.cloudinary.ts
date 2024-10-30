@@ -1,5 +1,5 @@
 import stream from "stream";
-import cloudinary from "./cloudinary.js";
+import cloudinary from "./cloudinary";
 
 const cloudinaryUploadFile = async (
   folder: string,

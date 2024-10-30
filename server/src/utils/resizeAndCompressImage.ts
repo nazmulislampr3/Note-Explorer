@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { ResizeCompressOptions } from "../types.js";
+import { ResizeCompressOptions } from "../types";
 
 async function resizeAndCompressImage(
   file: Express.Multer.File,

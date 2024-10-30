@@ -1,4 +1,4 @@
-import { NoteType } from "../types.js";
+import { NoteType } from "../types";
 
 const organize = (noteItem: any): NoteType => {
   const { _id, title, desc, addedToFavouriteAt, pinnedAt, theme, createdAt } =

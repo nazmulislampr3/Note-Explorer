@@ -5,9 +5,9 @@ import {
   favouriteToggle,
   getNotes,
   pinToggle,
-} from "../controllers/note.controller.js";
-import validateData from "../middlewares/validateData.middleware.js";
-import noteSchema from "../validators/note.validator.js";
+} from "../controllers/note.controller";
+import validateData from "../middlewares/validateData.middleware";
+import noteSchema from "../validators/note.validator";
 
 const noteRouter = Router();
 
