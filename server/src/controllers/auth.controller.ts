@@ -1,7 +1,7 @@
 import { CookieOptions } from "express";
 import jwt from "jsonwebtoken";
 import randomString from "randomstring";
-import { OtpOrToken } from "./../models/otp.model";
+import { OtpOrToken } from "./../models/otpOrToken.model";
 import { User } from "./../models/user.model";
 import ApiError from "./../utils/ApiError";
 import asyncHandler from "./../utils/asyncHandler";
