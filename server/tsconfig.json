@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",
     "target": "ES2020", // The JavaScript version to compile down to
     "module": "CommonJS", // Node.js uses CommonJS
     "rootDir": "./src", // Root directory of source files
