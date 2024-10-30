@@ -1,7 +1,7 @@
 import { CookieOptions } from "express";
 import jwt from "jsonwebtoken";
 import randomString from "randomstring";
-import { OtpOrToken } from "./../models/otpOrToken.model";
+// import { OtpOrToken } from "./../models/otpOrToken.model";
 import { User } from "./../models/user.model";
 import ApiError from "./../utils/ApiError";
 import asyncHandler from "./../utils/asyncHandler";
@@ -30,11 +30,11 @@ export const register = asyncHandler(async (req, res) => {
 
   const otp = generateOTP();
 
-  await new OtpOrToken({
-    registerKey,
-    registerToken,
-    otp,
-  }).save();
+  // await new OtpOrToken({
+  //   registerKey,
+  //   registerToken,
+  //   otp,
+  // }).save();
 
   // send otp via mail
   await sendMail({
@@ -49,45 +49,45 @@ export const register = asyncHandler(async (req, res) => {
 export const verifyRegisterToken = asyncHandler(async (req, res) => {
   const { token, key } = req.params;
 
-  const findToken = await OtpOrToken.findOne({
-    registerToken: token,
-    registerKey: key,
-  });
+  // const findToken = await OtpOrToken.findOne({
+  //   registerToken: token,
+  //   registerKey: key,
+  // });
 
-  if (!findToken) {
-    throw new ApiError(403, "Invalid token!");
-  }
+  // if (!findToken) {
+  //   throw new ApiError(403, "Invalid token!");
+  // }
 
-  const { email }: any = jwt.verify(token, key);
+  // const { email }: any = jwt.verify(token, key);
 
-  let expiresAt = new Date(findToken.createdAt);
+  // let expiresAt = new Date(findToken.createdAt);
 
-  expiresAt.setSeconds(expiresAt.getSeconds() + Number(process.env.OTP_EXPIRY));
+  // expiresAt.setSeconds(expiresAt.getSeconds() + Number(process.env.OTP_EXPIRY));
 
-  return res.json({ email: maskEmail(email), expiresAt });
+  // return res.json({ email: maskEmail(email), expiresAt });
 });
 
 export const verifyOTP = asyncHandler(async (req, res) => {
   const { token, key, otp }: any = req.params;
 
-  const findToken = await OtpOrToken.findOne({
-    registerToken: token,
-    registerKey: key,
-  }).select("otp");
+  // const findToken = await OtpOrToken.findOne({
+  //   registerToken: token,
+  //   registerKey: key,
+  // }).select("otp");
 
-  if (!findToken) {
-    throw new ApiError(400, "Invalid token!");
-  }
+  // if (!findToken) {
+  //   throw new ApiError(400, "Invalid token!");
+  // }
 
-  if (otp !== findToken?.otp) {
-    throw new ApiError(400, "Wrong OTP!");
-  }
+  // if (otp !== findToken?.otp) {
+  //   throw new ApiError(400, "Wrong OTP!");
+  // }
 
-  const userObj = jwt.verify(token, key);
+  // const userObj = jwt.verify(token, key);
 
-  await new User(userObj).save();
+  // await new User(userObj).save();
 
-  await OtpOrToken.deleteOne({ registerToken: token, registerKey: key });
+  // await OtpOrToken.deleteOne({ registerToken: token, registerKey: key });
 
   return res.json({ message: "User registration successfull." });
 });
@@ -99,16 +99,16 @@ export const resendOTP = asyncHandler(async (req, res) => {
 
   const otp = generateOTP();
 
-  const { createdAt } = await new OtpOrToken({
-    token,
-    key,
-    otp,
-  }).save();
+  // const { createdAt } = await new OtpOrToken({
+  //   token,
+  //   key,
+  //   otp,
+  // }).save();
 
-  let expiresAt = new Date(createdAt);
-  expiresAt.setSeconds(expiresAt.getSeconds() + Number(process.env.OTP_EXPIRY));
+  // let expiresAt = new Date(createdAt);
+  // expiresAt.setSeconds(expiresAt.getSeconds() + Number(process.env.OTP_EXPIRY));
 
-  return res.json({ expiresAt });
+  // return res.json({ expiresAt });
 });
 
 export const login = asyncHandler(async (req, res) => {
@@ -228,11 +228,11 @@ export const accountRecoverySendOTP = asyncHandler(async (req, res) => {
 
   const otp = generateOTP();
 
-  await new OtpOrToken({
-    accountRecoveryToken: token,
-    accountRecoveryKey: key,
-    otp,
-  }).save();
+  // await new OtpOrToken({
+  //   accountRecoveryToken: token,
+  //   accountRecoveryKey: key,
+  //   otp,
+  // }).save();
 
   // send otp via email
   await sendMail({
@@ -273,10 +273,10 @@ export const verifyAccountRecoveryToken = asyncHandler(async (req, res) => {
 export const resendAccountRecoveryOTP = asyncHandler(async (req, res) => {
   const { token, key } = req.params;
 
-  await OtpOrToken.deleteOne({
-    accountRecoveryToken: token,
-    accountRecoveryKey: key,
-  });
+  // await OtpOrToken.deleteOne({
+  //   accountRecoveryToken: token,
+  //   accountRecoveryKey: key,
+  // });
 
   const email = (jwt.verify(token, key) as any).email;
   if (!email) {
@@ -290,11 +290,11 @@ export const resendAccountRecoveryOTP = asyncHandler(async (req, res) => {
 
   const otp = generateOTP();
 
-  const { createdAt } = await new OtpOrToken({
-    accountRecoveryToken: token,
-    accountRecoveryKey: key,
-    otp,
-  }).save();
+  // const { createdAt } = await new OtpOrToken({
+  //   accountRecoveryToken: token,
+  //   accountRecoveryKey: key,
+  //   otp,
+  // }).save();
 
   // send otp via mail
   await sendMail({
@@ -303,55 +303,55 @@ export const resendAccountRecoveryOTP = asyncHandler(async (req, res) => {
     html: await accountRecoverOTPMail({ otp, reciever: user.fname }),
   });
 
-  const expiresAt = new Date(createdAt);
-  expiresAt.setSeconds(expiresAt.getSeconds() + Number(process.env.OTP_EXPIRY));
+  // const expiresAt = new Date(createdAt);
+  // expiresAt.setSeconds(expiresAt.getSeconds() + Number(process.env.OTP_EXPIRY));
 
-  return res.json({ expiresAt });
+  // return res.json({ expiresAt });
 });
 
 export const verifyAccountRecoveryOTP = asyncHandler(async (req, res) => {
   const { token, key, otp } = req.params;
 
-  const otpDoc = await OtpOrToken.findOne({
-    accountRecoveryToken: token,
-    accountRecoveryKey: key,
-    otp,
-  });
+  // const otpDoc = await OtpOrToken.findOne({
+  //   accountRecoveryToken: token,
+  //   accountRecoveryKey: key,
+  //   otp,
+  // });
 
-  if (!otpDoc) {
-    throw new ApiError(400, "Invalid token!");
-  }
+  // if (!otpDoc) {
+  //   throw new ApiError(400, "Invalid token!");
+  // }
 
-  if (otpDoc.otp !== otp) {
-    throw new ApiError(400, "Wrong OTP!");
-  }
+  // if (otpDoc.otp !== otp) {
+  //   throw new ApiError(400, "Wrong OTP!");
+  // }
 
-  await OtpOrToken.deleteOne({ _id: otpDoc._id });
+  // await OtpOrToken.deleteOne({ _id: otpDoc._id });
 
-  const email = (jwt.verify(token, key) as any).email;
+  // const email = (jwt.verify(token, key) as any).email;
 
-  const resetPasswordKey = randomString.generate(64);
-  const resetPasswordToken = jwt.sign({ email }, resetPasswordKey);
+  // const resetPasswordKey = randomString.generate(64);
+  // const resetPasswordToken = jwt.sign({ email }, resetPasswordKey);
 
-  await new OtpOrToken({ resetPasswordToken, resetPasswordKey }).save();
+  // await new OtpOrToken({ resetPasswordToken, resetPasswordKey }).save();
 
-  return res.json({
-    token: resetPasswordToken,
-    key: resetPasswordKey,
-  });
+  // return res.json({
+  //   token: resetPasswordToken,
+  //   key: resetPasswordKey,
+  // });
 });
 
 export const verifyResetPasswordToken = asyncHandler(async (req, res) => {
   const { token, key } = req.params;
 
-  const exists = await OtpOrToken.exists({
-    resetPasswordToken: token,
-    resetPasswordKey: key,
-  });
+  // const exists = await OtpOrToken.exists({
+  //   resetPasswordToken: token,
+  //   resetPasswordKey: key,
+  // });
 
-  if (!exists) {
-    throw new ApiError(400, "Invalid token!");
-  }
+  // if (!exists) {
+  //   throw new ApiError(400, "Invalid token!");
+  // }
 
   return res.json({ message: "Token validation successfull!" });
 });
@@ -360,34 +360,34 @@ export const resetPassword = asyncHandler(async (req, res) => {
   const { token, key } = req.params;
   const password = req.body.password;
 
-  const tokenDoc = await OtpOrToken.findOne({
-    resetPasswordToken: token,
-    resetPasswordKey: key,
-  });
+  // const tokenDoc = await OtpOrToken.findOne({
+  //   resetPasswordToken: token,
+  //   resetPasswordKey: key,
+  // });
 
-  if (!tokenDoc) {
-    throw new ApiError(400, "Invalid token!");
-  }
+  // if (!tokenDoc) {
+  //   throw new ApiError(400, "Invalid token!");
+  // }
 
-  const email = (jwt.verify(token, key) as any).email;
+  // const email = (jwt.verify(token, key) as any).email;
 
-  if (!email) {
-    throw new ApiError(400, "Invalid token!");
-  }
+  // if (!email) {
+  //   throw new ApiError(400, "Invalid token!");
+  // }
 
-  const user = await User.findOne({ email }).select("password");
+  // const user = await User.findOne({ email }).select("password");
 
-  if (!user) {
-    throw new ApiError(400, "No user exists with this email!");
-  }
+  // if (!user) {
+  //   throw new ApiError(400, "No user exists with this email!");
+  // }
 
-  user.password = password;
+  // user.password = password;
 
-  await user.save({ validateBeforeSave: false });
+  // await user.save({ validateBeforeSave: false });
 
-  return res.json({
-    message: "Account recovered successfully. Now you can login.",
-  });
+  // return res.json({
+  //   message: "Account recovered successfully. Now you can login.",
+  // });
 });
 
 // Update user details
