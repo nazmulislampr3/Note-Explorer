@@ -1,5 +1,5 @@
 import { ZodSchema } from "zod";
-import asyncHandler from "../utils/asyncHandler";
+import asyncHandler from "../utils/asyncHandler.js";
 
 export const validateData = (schema: ZodSchema) =>
   asyncHandler(async (req, res, next) => {

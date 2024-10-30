@@ -1,4 +1,4 @@
-import transporter from "./transporter.mailer";
+import transporter from "./transporter.mailer.js";
 
 type MailOptions = {
   subject: string;

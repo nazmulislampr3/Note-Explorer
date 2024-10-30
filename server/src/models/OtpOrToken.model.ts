@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import cleanMongooseDocument from "../utils/cleanMongooseDocument";
+import cleanMongooseDocument from "../utils/cleanMongooseDocument.js";
 
 const otpSchema = new Schema({
   otp: String,

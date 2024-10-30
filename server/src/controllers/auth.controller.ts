@@ -1,16 +1,19 @@
 import { CookieOptions } from "express";
 import jwt from "jsonwebtoken";
 import randomString from "randomstring";
-import { OtpOrToken } from "../models/otpOrToken.model";
-import { User } from "../models/user.model";
-import ApiError from "../utils/ApiError";
-import asyncHandler from "../utils/asyncHandler";
-import deleteFile from "../utils/cloudinary/deleteFile.cloudinary";
-import cloudinaryUploadPhoto from "../utils/cloudinary/uploadPhoto.cloudinary";
-import generateOTP from "../utils/generateOTP";
-import { accountRecoverOTPMail, registerOTPMail } from "../utils/mailer/mails";
-import sendMail from "../utils/mailer/sendMail";
-import maskEmail from "../utils/maskEmail";
+import { OtpOrToken } from "../models/otpOrToken.model.js";
+import { User } from "../models/user.model.js";
+import ApiError from "../utils/ApiError.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import deleteFile from "../utils/cloudinary/deleteFile.cloudinary.js";
+import cloudinaryUploadPhoto from "../utils/cloudinary/uploadPhoto.cloudinary.js";
+import generateOTP from "../utils/generateOTP.js";
+import {
+  accountRecoverOTPMail,
+  registerOTPMail,
+} from "../utils/mailer/mails/index.js";
+import sendMail from "../utils/mailer/sendMail.js";
+import maskEmail from "../utils/maskEmail.js";
 
 export const register = asyncHandler(async (req, res) => {
   const { email, fname } = req.body;

@@ -1,7 +1,7 @@
-import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
-import ApiError from "../utils/ApiError";
-import { ZodError } from "zod";
+import { NextFunction, Request, Response } from "express";
 import { MulterError } from "multer";
+import { ZodError } from "zod";
+import ApiError from "../utils/ApiError.js";
 
 const errorHandler = (
   err: any,

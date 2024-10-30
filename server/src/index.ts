@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config();
 //
-import connectMongo from "./db/connectMongo";
-import app from "./app";
-import "./utils/cloudinary/cloudinary";
-import "./utils/mailer/transporter.mailer";
+import connectMongo from "./db/connectMongo.js";
+import app from "./app.js";
+import "./utils/cloudinary/cloudinary.js";
+import "./utils/mailer/transporter.mailer.js";
 
 const port = process.env.PORT || 5000;
 

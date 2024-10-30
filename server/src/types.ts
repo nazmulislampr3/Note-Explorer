@@ -1,5 +1,5 @@
 import { Request as Req } from "express";
-import { Document, Types } from "mongoose";
+import { Document } from "mongoose";
 
 export type CloudinaryImage = { url: string; public_id?: string };
 

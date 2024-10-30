@@ -1,5 +1,5 @@
-import asyncHandler from "../utils/asyncHandler";
-import emailValidator from "../validators/email.validator";
+import asyncHandler from "../utils/asyncHandler.js";
+import emailValidator from "../validators/email.validator.js";
 
 const validateEmail = asyncHandler(async (req, res, next) => {
   emailValidator.parse(req.params.email || req.query.email || "");

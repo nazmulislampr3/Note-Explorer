@@ -1,6 +1,6 @@
-import { User } from "../models/user.model";
-import ApiError from "../utils/ApiError";
-import asyncHandler from "../utils/asyncHandler";
+import { User } from "../models/user.model.js";
+import ApiError from "../utils/ApiError.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
 const matchPassword = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user?._id).select("password");

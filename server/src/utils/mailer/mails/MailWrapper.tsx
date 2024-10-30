@@ -1,4 +1,4 @@
-import { Html, Button, Heading, Container } from "@react-email/components";
+import { Container, Heading, Html } from "@react-email/components";
 import React, { ReactNode } from "react";
 
 const MailWrapper = ({
