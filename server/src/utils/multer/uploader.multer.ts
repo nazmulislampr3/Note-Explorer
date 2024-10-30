@@ -1,6 +1,4 @@
 import multer, { memoryStorage } from "multer";
-import { FileTypes } from "../types";
-import ApiError from "./ApiError";
 
 const fileFilter = (fileType?: any) => {
   return (
@@ -15,7 +13,7 @@ const fileFilter = (fileType?: any) => {
   };
 };
 
-export const uploadImage = multer({
+export const imageUploader = multer({
   storage: memoryStorage(),
   fileFilter: fileFilter("image"),
 });

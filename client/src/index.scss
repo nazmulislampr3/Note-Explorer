@@ -1,0 +1,39 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --sidebar-padding: 10px;
+    --sidebar-icon-size: 50px;
+  }
+
+  body {
+    @apply text-slate-200;
+    font-family: "Roboto", sans-serif;
+  }
+}
+
+@layer utilities {
+  // Sidebar
+  .header {
+    .search-bar-icon {
+      @apply h-10 aspect-square;
+      svg {
+        @apply size-4/5 p-1.5 cursor-pointer m-auto font-bold;
+      }
+    }
+  }
+  .sidebar {
+    .menu-item {
+      .icon {
+        &:hover {
+          .abbr {
+            @apply translate-y-0 -translate-x-0 opacity-100;
+          }
+        }
+      }
+    }
+  }
+}

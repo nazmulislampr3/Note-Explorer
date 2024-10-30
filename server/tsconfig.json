@@ -8,7 +8,8 @@
     "strict": true, // Enable all strict type-checking options
     "moduleResolution": "node", // Resolve modules like Node.js
     "skipLibCheck": true, // Skip type checking of declaration files
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx"
   },
   "include": ["src"], // Include files in the src directory
   "exclude": ["node_modules"] // Exclude node_modules folder

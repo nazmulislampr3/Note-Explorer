@@ -3,7 +3,8 @@ dotenv.config();
 //
 import connectMongo from "./db/connectMongo";
 import app from "./app";
-import "./utils/cloudinary";
+import "./utils/cloudinary/cloudinary";
+import "./utils/mailer/transporter.mailer";
 
 const port = process.env.PORT || 5000;
 

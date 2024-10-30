@@ -8,6 +8,7 @@ const otpSchema = new Schema({
   // account recovery
   accountRecoveryToken: String,
   accountRecoveryKey: String,
+  // reset password
   resetPasswordToken: String,
   resetPasswordKey: String,
   createdAt: {

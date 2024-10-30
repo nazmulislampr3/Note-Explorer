@@ -19,8 +19,12 @@ const changePasswordSchema = z
       path: ["globalMessage"],
     }
   )
-  .refine(({ password, confirm_password }) => password === confirm_password, {
-    message: "Password must match with confirm password!",
-  });
+  .refine(
+    ({ password, confirm_password }) =>
+      !password || !confirm_password || password === confirm_password,
+    {
+      message: "Password must match with confirm password!",
+    }
+  );
 
 export default changePasswordSchema;

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 
 function cleanMongooseDocument(doc: any): void {
   const keys = Object.keys(doc.toObject());
@@ -8,8 +8,7 @@ function cleanMongooseDocument(doc: any): void {
 
     // Check for falsy values and empty arrays/objects, but preserve createdAt and updatedAt
     if (
-      key !== "createdAt" &&
-      key !== "updatedAt" && // Keep createdAt and updatedAt
+      !(value instanceof Date || isValidObjectId(value)) && // Keep date and objectId
       (!value || // Remove empty string
         (Array.isArray(value) && value.length === 0) || // Remove empty arrays
         (typeof value === "object" &&

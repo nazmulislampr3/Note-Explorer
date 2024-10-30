@@ -1,16 +1,19 @@
 import { CookieOptions } from "express";
 import jwt from "jsonwebtoken";
 import randomString from "randomstring";
-import { OtpOrToken } from "../models/OtpOrToken.model";
+import { OtpOrToken } from "../models/otpOrToken.model";
 import { User } from "../models/user.model";
 import ApiError from "../utils/ApiError";
 import asyncHandler from "../utils/asyncHandler";
-import cloudinaryUploadPhoto from "../utils/cloudinaryUploadPhoto";
+import deleteFile from "../utils/cloudinary/deleteFile.cloudinary";
+import cloudinaryUploadPhoto from "../utils/cloudinary/uploadPhoto.cloudinary";
 import generateOTP from "../utils/generateOTP";
+import { accountRecoverOTPMail, registerOTPMail } from "../utils/mailer/mails";
+import sendMail from "../utils/mailer/sendMail";
 import maskEmail from "../utils/maskEmail";
 
 export const register = asyncHandler(async (req, res) => {
-  const { email } = req.body;
+  const { email, fname } = req.body;
 
   const existUser = await User.exists({ email });
 
@@ -18,7 +21,7 @@ export const register = asyncHandler(async (req, res) => {
     throw new ApiError(400, "User already exists with this email.");
   }
 
-  const registerKey = "";
+  const registerKey = randomString.generate(120);
 
   const registerToken = jwt.sign(req.body, registerKey);
 
@@ -31,14 +34,22 @@ export const register = asyncHandler(async (req, res) => {
   }).save();
 
   // send otp via mail
+  await sendMail({
+    subject: "Account verification.",
+    to: email,
+    html: await registerOTPMail({ otp, reciever: fname }),
+  });
 
   return res.json({ token: registerToken, key: registerKey });
 });
 
 export const verifyRegisterToken = asyncHandler(async (req, res) => {
-  const { token, key }: any = req.query;
+  const { token, key } = req.params;
 
-  const findToken = await OtpOrToken.findOne({ token, key });
+  const findToken = await OtpOrToken.findOne({
+    registerToken: token,
+    registerKey: key,
+  });
 
   if (!findToken) {
     throw new ApiError(403, "Invalid token!");
@@ -54,9 +65,12 @@ export const verifyRegisterToken = asyncHandler(async (req, res) => {
 });
 
 export const verifyOTP = asyncHandler(async (req, res) => {
-  const { token, key, otp }: any = req.query;
+  const { token, key, otp }: any = req.params;
 
-  const findToken = await OtpOrToken.findOne({ token, key });
+  const findToken = await OtpOrToken.findOne({
+    registerToken: token,
+    registerKey: key,
+  }).select("otp");
 
   if (!findToken) {
     throw new ApiError(400, "Invalid token!");
@@ -66,13 +80,17 @@ export const verifyOTP = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Wrong OTP!");
   }
 
-  OtpOrToken.deleteOne({ token, key });
+  const userObj = jwt.verify(token, key);
+
+  await new User(userObj).save();
+
+  await OtpOrToken.deleteOne({ registerToken: token, registerKey: key });
 
   return res.json({ message: "User registration successfull." });
 });
 
 export const resendOTP = asyncHandler(async (req, res) => {
-  const { token, key }: any = req.query;
+  const { token, key }: any = req.params;
 
   const { email }: any = jwt.verify(token, key);
 
@@ -112,7 +130,7 @@ export const login = asyncHandler(async (req, res) => {
 
   user.refreshToken = [...(user.refreshToken || []), refreshToken];
 
-  await user.save();
+  await user.save({ validateBeforeSave: false });
 
   const options: CookieOptions = {
     httpOnly: true,
@@ -122,7 +140,7 @@ export const login = asyncHandler(async (req, res) => {
   return res
     .cookie("accessToken", accessToken, {
       ...options,
-      maxAge: 4000,
+      maxAge: Number(process.env.JWT_ACCESS_TOKEN_EXPIRY) * 60 * 1000,
     })
     .cookie("refreshToken", refreshToken, options)
     .json({
@@ -130,17 +148,74 @@ export const login = asyncHandler(async (req, res) => {
       fname,
       lname,
       avatar,
-      birthdate,
+      birthdate: birthdate || "",
     });
+});
+
+// token
+export const getNewAccessToken = asyncHandler(async (req, res) => {
+  const refreshToken =
+    req.cookies?.refreshToken || req.headers["x-refresh-token"];
+
+  if (!refreshToken) {
+    throw new ApiError(
+      400,
+      "No refresh token available to generate a new access token."
+    );
+  }
+
+  const userId = (
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET!) as any
+  ).id;
+
+  const user = await User.findOne({ _id: userId, refreshToken });
+
+  if (!user) {
+    throw new ApiError(400, "Invalid refresh token!");
+  }
+
+  const accessToken = user.generateAccessToken();
+
+  return res.cookie("accessToken", accessToken).end();
+});
+
+// logout
+export const logout = asyncHandler(async (req, res) => {
+  const refreshToken =
+    req.cookies?.refreshToken || req.headers["x-refresh-token"];
+
+  const userId = (
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET!) as any
+  ).id;
+
+  if (refreshToken) {
+    await User.updateOne({ _id: userId }, [
+      {
+        $set: {
+          refreshToken: {
+            $filter: {
+              input: "$refreshToken",
+              as: "token",
+              cond: {
+                $ne: ["$$token", refreshToken],
+              },
+            },
+          },
+        },
+      },
+    ]);
+  }
+
+  return res.clearCookie("accessToken").clearCookie("refreshToken").end();
 });
 
 // Account recovery
 export const accountRecoverySendOTP = asyncHandler(async (req, res) => {
   const { email } = req.params;
 
-  const exists = await User.exists({ email });
+  const user = await User.findOne({ email }).select("fname");
 
-  if (!exists) {
+  if (!user) {
     throw new ApiError(400, "No account exists with this email.");
   }
 
@@ -150,13 +225,18 @@ export const accountRecoverySendOTP = asyncHandler(async (req, res) => {
 
   const otp = generateOTP();
 
-  // send otp via email
-
   await new OtpOrToken({
     accountRecoveryToken: token,
     accountRecoveryKey: key,
     otp,
   }).save();
+
+  // send otp via email
+  await sendMail({
+    subject: "Account Recovery",
+    to: email,
+    html: await accountRecoverOTPMail({ otp, reciever: user.fname }),
+  });
 
   return res.json({ token, key });
 });
@@ -164,28 +244,30 @@ export const accountRecoverySendOTP = asyncHandler(async (req, res) => {
 export const verifyAccountRecoveryToken = asyncHandler(async (req, res) => {
   const { token, key } = req.params;
 
-  const validToken = await OtpOrToken.findOne({
-    accountRecoveryToken: token,
-    accountRecoveryKey: key,
-  });
+  return res.json({ token, key });
 
-  if (!validToken) {
-    throw new ApiError(400, "Invalid token.");
-  }
+  // const validToken = await OtpOrToken.findOne({
+  //   accountRecoveryToken: token,
+  //   accountRecoveryKey: key,
+  // });
 
-  const { email }: any = jwt.verify(token, key);
+  // if (!validToken) {
+  //   throw new ApiError(400, "Invalid token.");
+  // }
 
-  if (email) {
-    throw new ApiError(400, "Invalid token!");
-  }
+  // const { email }: any = jwt.verify(token, key);
 
-  const expiresAt = new Date(validToken.createdAt);
-  expiresAt.setSeconds(expiresAt.getSeconds() + Number(process.env.OTP_EXPIRY));
+  // if (email) {
+  //   throw new ApiError(400, "Invalid token!");
+  // }
 
-  return res.json({ email: maskEmail(email), expiresAt, token, key });
+  // const expiresAt = new Date(validToken.createdAt);
+  // expiresAt.setSeconds(expiresAt.getSeconds() + Number(process.env.OTP_EXPIRY));
+
+  // return res.json({ email: maskEmail(email), expiresAt, token, key });
 });
 
-export const resendAccountVerifyOTP = asyncHandler(async (req, res) => {
+export const resendAccountRecoveryOTP = asyncHandler(async (req, res) => {
   const { token, key } = req.params;
 
   await OtpOrToken.deleteOne({
@@ -194,9 +276,13 @@ export const resendAccountVerifyOTP = asyncHandler(async (req, res) => {
   });
 
   const email = (jwt.verify(token, key) as any).email;
-
   if (!email) {
     throw new ApiError(400, "Invalid token!");
+  }
+
+  const user = await User.findOne({ email }).select("fname");
+  if (!user) {
+    throw new ApiError(400, "Something went wrong!");
   }
 
   const otp = generateOTP();
@@ -208,6 +294,11 @@ export const resendAccountVerifyOTP = asyncHandler(async (req, res) => {
   }).save();
 
   // send otp via mail
+  await sendMail({
+    to: email,
+    subject: "Account Recovery.",
+    html: await accountRecoverOTPMail({ otp, reciever: user.fname }),
+  });
 
   const expiresAt = new Date(createdAt);
   expiresAt.setSeconds(expiresAt.getSeconds() + Number(process.env.OTP_EXPIRY));
@@ -243,7 +334,7 @@ export const verifyAccountRecoveryOTP = asyncHandler(async (req, res) => {
 
   return res.json({
     token: resetPasswordToken,
-    resetPasswordKey: resetPasswordKey,
+    key: resetPasswordKey,
   });
 });
 
@@ -292,19 +383,23 @@ export const resetPassword = asyncHandler(async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   return res.json({
-    message: "Account recoverd successfully. Now you can login.",
+    message: "Account recovered successfully. Now you can login.",
   });
 });
 
 // Update user details
 export const updateUserInfo = asyncHandler(async (req, res) => {
   const { password, ...others } = req.body;
-  let user = req.user!;
-  user = { ...user, ...others };
+  // req.user = { ...req.user, ...others };
+  Object.assign(req.user!, others);
+  const updatedUser = await req.user!.save({ validateBeforeSave: false });
 
-  await user.save({ validateBeforeSave: false });
+  const { fname, lname, email, avatar } = updatedUser;
 
-  return res.json({ message: "User info updated successfully.", user });
+  return res.json({
+    message: "User details updated successfully.",
+    user: { fname, lname, email, avatar },
+  });
 });
 
 export const updateAvatar = asyncHandler(async (req, res) => {
@@ -313,16 +408,24 @@ export const updateAvatar = asyncHandler(async (req, res) => {
   }
   const url = await cloudinaryUploadPhoto("avatars", req.file!);
 
-  // // req.user!.avatar = { url, public_id };
-  // // await req.user!.save({ validateBeforeSave: false });
+  deleteFile(req.user?.avatar || "");
 
-  return res.json({ avatar: url });
+  req.user!.avatar = url;
+  await req.user!.save({ validateBeforeSave: false });
+
+  return res.json({ url });
 });
 
 export const changePassword = asyncHandler(async (req, res) => {
-  let user = req.user!;
-  user.password = req.body.password;
-  await user.save({ validateBeforeSave: false });
+  const userDoc = await User.findById(req.user!.id).select("password");
+  const passwordMatched = await userDoc?.matchPassword(req.body.old_password);
+
+  if (!passwordMatched) {
+    throw new ApiError(400, "Incorrect old password.");
+  }
+
+  req.user!.password = req.body.password;
+  await req.user!.save({ validateBeforeSave: false });
 
   return res.json({ message: "Password changed successfully!" });
 });

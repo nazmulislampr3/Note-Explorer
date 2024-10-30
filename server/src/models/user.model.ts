@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 import { DB_User } from "../types";
 import cleanMongooseDocument from "../utils/cleanMongooseDocument";
+const { Date, String } = Schema.Types;
 
 const userSchema = new Schema<DB_User>(
   {

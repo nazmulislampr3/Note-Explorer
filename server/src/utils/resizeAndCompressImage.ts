@@ -1,23 +1,20 @@
 import sharp from "sharp";
-
-type ResizeCompressOptions = {
-  maxWidth?: number;
-  maxSize?: number; //kb
-};
+import { ResizeCompressOptions } from "../types";
 
 async function resizeAndCompressImage(
   file: Express.Multer.File,
   options: ResizeCompressOptions
 ): Promise<Buffer> {
-  const { maxWidth = 400, maxSize = 300 } = options;
+  const { maxWidth = 600, maxSize = 300 } = options;
 
   const imageBuffer = await sharp(file.buffer).resize(maxWidth).toBuffer();
 
   let imageSize = imageBuffer.length / 1024; //in KB
-  let quality = 100;
-  while (quality >= 50 && imageSize >= maxSize) {
-    quality -= 5;
-    const buffer = await sharp(file.path)
+
+  let quality = 80;
+  while (quality >= 40 && imageSize >= maxSize) {
+    quality -= 2;
+    const buffer = await sharp(file.buffer)
       .resize(maxWidth)
       .jpeg({ quality })
       .toBuffer();

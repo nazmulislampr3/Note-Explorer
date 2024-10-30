@@ -1,5 +1,5 @@
 import { Request as Req } from "express";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 export type CloudinaryImage = { url: string; public_id?: string };
 
@@ -17,6 +17,11 @@ export interface DB_User extends Document {
   generateRefreshToken: () => string;
 }
 
+export type ResizeCompressOptions = {
+  maxWidth?: number;
+  maxSize?: number; //kb
+};
+
 export interface Request extends Req {
   user?: DB_User;
 }
@@ -24,3 +29,14 @@ export interface Request extends Req {
 export type FileTypes = "image";
 
 export type ImageMimeType = "image/jpeg" | "image/jpg" | "image/png";
+
+export type NoteType = {
+  typename: string;
+  id: any;
+  title: string;
+  desc: string;
+  theme: string;
+  addedToFavouriteAt: Date | null;
+  pinnedAt: Date | null;
+  createdAt: Date;
+};

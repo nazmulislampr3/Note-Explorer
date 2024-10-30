@@ -6,13 +6,13 @@ import jwt from "jsonwebtoken";
 const requireAuth = asyncHandler(async (req, res, next) => {
   let accessToken =
     req.cookies?.accessToken ||
-    req.headers?.["Authorization"]?.toString().replace("Bearer ", "");
+    req.headers?.["authorization"]?.replace("Bearer ", "");
 
   if (!accessToken) {
     throw new ApiError(401, "Unauthorized!");
   }
 
-  const userId = JSON.parse(
+  const userId = (
     jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN_SECRET!) as any
   ).id;
 
