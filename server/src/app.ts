@@ -23,6 +23,13 @@ app.use(cors({ origin: process.env.CLIENT_URI }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(
+  "/",
+  asyncHandler(async (req, res) => {
+    return res.json({ test: true });
+  })
+);
+
 app.use("/api/v1", routers);
 
 app.use(
