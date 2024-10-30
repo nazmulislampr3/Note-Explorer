@@ -1,4 +1,4 @@
-import { LucideProps, Settings } from "lucide-react";
+import { LucideProps } from "lucide-react";
 
 export type LucidIconType = React.ForwardRefExoticComponent<
   Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>

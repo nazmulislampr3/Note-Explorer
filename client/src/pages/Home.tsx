@@ -1,8 +1,7 @@
-import { Outlet } from "react-router";
+import { useEffect } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { useUIContext } from "../context/UIContext";
-import { useEffect } from "react";
 
 const Home = () => {
   const { initialize } = useUIContext()!;
