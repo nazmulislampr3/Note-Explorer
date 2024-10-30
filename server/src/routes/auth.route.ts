@@ -16,17 +16,17 @@ import {
   verifyOTP,
   verifyRegisterToken,
   verifyResetPasswordToken,
-} from "../controllers/auth.controller";
-import matchPassword from "../middlewares/matchPassword.middleware";
-import requireAuth from "../middlewares/requireAuth.middleware";
-import validateData from "../middlewares/validateData.middleware";
-import validateEmail from "../middlewares/validateEmail.middleware";
-import { imageUploader } from "../utils/multer/uploader.multer";
-import changePasswordSchema from "../validators/changePassword.validator";
-import loginSchema from "../validators/login.validator";
-import passwordSchema from "../validators/password.validator";
-import registerSchema from "../validators/register.validator";
-import userInfoSchema from "../validators/userInfo.validator";
+} from "./../controllers/auth.controller";
+import matchPassword from "./../middlewares/matchPassword.middleware";
+import requireAuth from "./../middlewares/requireAuth.middleware";
+import validateData from "./../middlewares/validateData.middleware";
+import validateEmail from "./../middlewares/validateEmail.middleware";
+import { imageUploader } from "./../utils/multer/uploader.multer";
+import changePasswordSchema from "./../validators/changePassword.validator";
+import loginSchema from "./../validators/login.validator";
+import passwordSchema from "./../validators/password.validator";
+import registerSchema from "./../validators/register.validator";
+import userInfoSchema from "./../validators/userInfo.validator";
 
 const authRouter = Router();
 

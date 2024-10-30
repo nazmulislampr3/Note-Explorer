@@ -1,8 +1,8 @@
 import { PipelineStage, Types } from "mongoose";
-import { Note } from "../models/note.model";
-import asyncHandler from "../utils/asyncHandler";
-import organizeNotes from "../utils/organizeNotes";
-import ApiError from "../utils/ApiError";
+import { Note } from "./../models/note.model";
+import asyncHandler from "./../utils/asyncHandler";
+import organizeNotes from "./../utils/organizeNotes";
+import ApiError from "./../utils/ApiError";
 
 export const getNotes = asyncHandler(async (req, res) => {
   const { favourites, pinned } = req.query;

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import ApiError from "../utils/ApiError";
+import ApiError from "./../utils/ApiError";
 
 const connectMongo = async (): Promise<any> => {
   try {

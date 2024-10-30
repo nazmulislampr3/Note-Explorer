@@ -1,19 +1,19 @@
 import { CookieOptions } from "express";
 import jwt from "jsonwebtoken";
 import randomString from "randomstring";
-import { OtpOrToken } from "../models/otpOrToken.model";
-import { User } from "../models/user.model";
-import ApiError from "../utils/ApiError";
-import asyncHandler from "../utils/asyncHandler";
-import deleteFile from "../utils/cloudinary/deleteFile.cloudinary";
-import cloudinaryUploadPhoto from "../utils/cloudinary/uploadPhoto.cloudinary";
-import generateOTP from "../utils/generateOTP";
+import { OtpOrToken } from "./../models/otpOrToken.model";
+import { User } from "./../models/user.model";
+import ApiError from "./../utils/ApiError";
+import asyncHandler from "./../utils/asyncHandler";
+import deleteFile from "./../utils/cloudinary/deleteFile.cloudinary";
+import cloudinaryUploadPhoto from "./../utils/cloudinary/uploadPhoto.cloudinary";
+import generateOTP from "./../utils/generateOTP";
 import {
   accountRecoverOTPMail,
   registerOTPMail,
-} from "../utils/mailer/mails/index";
-import sendMail from "../utils/mailer/sendMail";
-import maskEmail from "../utils/maskEmail";
+} from "./../utils/mailer/mails/index";
+import sendMail from "./../utils/mailer/sendMail";
+import maskEmail from "./../utils/maskEmail";
 
 export const register = asyncHandler(async (req, res) => {
   const { email, fname } = req.body;

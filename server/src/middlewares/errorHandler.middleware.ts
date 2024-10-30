@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { MulterError } from "multer";
 import { ZodError } from "zod";
-import ApiError from "../utils/ApiError";
+import ApiError from "./../utils/ApiError";
 
 const errorHandler = (
   err: any,

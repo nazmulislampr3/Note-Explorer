@@ -1,6 +1,6 @@
-import { User } from "../models/user.model";
-import ApiError from "../utils/ApiError";
-import asyncHandler from "../utils/asyncHandler";
+import { User } from "./../models/user.model";
+import ApiError from "./../utils/ApiError";
+import asyncHandler from "./../utils/asyncHandler";
 import jwt from "jsonwebtoken";
 
 const requireAuth = asyncHandler(async (req, res, next) => {
