@@ -5,7 +5,7 @@ import noteRouter from "./noteRoutes";
 import requireAuth from "./../middlewares/requireAuth.middleware";
 const router = Router();
 
-// router.use("/auth", authRouter);
+router.use("/auth", authRouter);
 router.use("/upload", uploadRouter);
 router.use("/notes", requireAuth, noteRouter);
 
