@@ -85,7 +85,7 @@ const Sidebar = () => {
           return (
             <ul className="flex flex-col gap-2" key={index}>
               {menuItem.map((menuItem) => {
-                const { Icon, name, fn, url } = menuItem;
+                const { Icon, name, url } = menuItem;
                 const active = url ? url === pathname : false;
                 return (
                   <li

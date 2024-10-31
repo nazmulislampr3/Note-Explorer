@@ -1,15 +1,9 @@
-import {
-  HashRouter,
-  MemoryRouter,
-  Navigate,
-  Route,
-  Routes,
-} from "react-router-dom";
-import Home from "./pages/Home";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import Notes from "./components/Notes";
-import UserInfo from "./pages/UserInfo";
-import Security from "./pages/Security";
 import FavouriteNotes from "./pages/FavouriteNotes";
+import Home from "./pages/Home";
+import Security from "./pages/Security";
+import UserInfo from "./pages/UserInfo";
 
 const App = () => {
   return (

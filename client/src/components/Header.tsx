@@ -11,9 +11,7 @@ const Header = () => {
   const searchBtnSmRef = useRef<any>(null);
   const [searchValue, setSearchValue] = useState<string>("");
 
-  const handleSearch = () => {
-    const searchValue = "d";
-  };
+  const handleSearch = () => {};
 
   useEffect(() => {
     if (searchBar) {

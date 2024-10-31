@@ -1,7 +1,5 @@
-import { useState } from "react";
-
 const Notes = () => {
-  const [data, setData] = useState<any>(null);
+  // const [data, setData] = useState<any>(null);
 
   // useEffect(() => {
   //   axios
