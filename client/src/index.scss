@@ -16,6 +16,21 @@
 }
 
 @layer utilities {
+  // Custom scrollbar
+  .scrollbar {
+    &::-webkit-scrollbar {
+      @apply w-1;
+    }
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px grey;
+    }
+    &::-webkit-scrollbar-thumb {
+      @apply rounded-lg bg-slate-400;
+      &:hover {
+        @apply bg-blue-500;
+      }
+    }
+  }
   // Sidebar
   .header {
     .search-bar-icon {

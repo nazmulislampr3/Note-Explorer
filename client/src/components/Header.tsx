@@ -1,12 +1,19 @@
 import { Menu, Search, X } from "lucide-react";
-import cn from "../utils/cn";
+import { useEffect, useRef, useState } from "react";
 import { useUIContext } from "../context/UIContext";
-import { useEffect, useRef } from "react";
+import cn from "../utils/cn";
 
 const Header = () => {
   const { activeTool, setActiveTool } = useUIContext()!;
   const searchBar = activeTool === "searchbar";
   const searchbarRef = useRef<any>(null);
+  const searchBtnRef = useRef<any>(null);
+  const searchBtnSmRef = useRef<any>(null);
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  const handleSearch = () => {
+    const searchValue = "d";
+  };
 
   useEffect(() => {
     if (searchBar) {
@@ -16,7 +23,7 @@ const Header = () => {
 
   return (
     <div className="shadow-sm shadow-slate-800 flex flex-col justify-center py-2 relative header bg-slate-900 z-50">
-      <div className={cn("px-5 flex items-center justify-between")}>
+      <div className={cn("px-5 flex items-center justify-between gap-5")}>
         <div className="flex gap-3 items-center justify-center">
           <div
             className={cn(
@@ -32,10 +39,31 @@ const Header = () => {
             Note Explorer
           </div>
         </div>
-        <input
-          type="text"
-          className="bg-slate-500 w-96 py-1.5 outline-0 border-2 border-slate-700 rounded-sm px-2 font-semibold focus:shadow-lg focus:shadow-slate-800 transition-all hidden sm:block"
-        />
+        <div className="hidden sm:flex bg-slate-800 rounded-full rounded-r-full overflow-hidden pl-3">
+          {/* <div className="w-52 bg-green-300"></div> */}
+          <input
+            type="text"
+            className="outline-0 w-96 px-3 py-2 bg-transparent"
+            placeholder="Search your notes here..."
+            onChange={(e) => setSearchValue(e.target.value)}
+            value={searchValue}
+            onKeyUp={(e) => e.key === "Enter" && searchBtnSmRef.current.click()}
+          />
+          <div className="size-12 flex-shrink-0 flex items-center justify-center relative">
+            <button
+              className={cn(
+                " bg-blue-500 size-4/5 rounded-full absolute transition-all duration-200 -translate-x-0 -translate-y-1/2 top-1/2 left-full",
+                {
+                  "left-1/2 -translate-x-1/2": searchValue,
+                }
+              )}
+              ref={searchBtnSmRef}
+              onClick={handleSearch}
+            >
+              <Search className="m-auto size-3/5" />
+            </button>
+          </div>
+        </div>
         <div className="flex items-center justify-center gap-10">
           {!searchBar ? (
             <Search
@@ -63,15 +91,23 @@ const Header = () => {
       >
         <div className="w-full flex">
           <button className="search-bar-icon bg-red-700">
-            <X onClick={() => setActiveTool(null)} />
+            <X
+              onClick={() => {
+                setActiveTool(null);
+                setSearchValue("");
+              }}
+            />
           </button>
           <input
             ref={searchbarRef}
             type="text"
             placeholder="Search your note..."
             className="px-3 py-2 z-auto bg-slate-600 outline-none w-full h-auto"
+            onChange={(e) => setSearchValue(e.target.value)}
+            value={searchValue}
+            onKeyUp={(e) => e.key === "Enter" && searchBtnRef.current.click()}
           />
-          <button className="search-bar-icon bg-blue-500">
+          <button className="search-bar-icon bg-blue-500" ref={searchBtnRef}>
             <Search />
           </button>
         </div>

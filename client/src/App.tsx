@@ -1,5 +1,15 @@
-import { HashRouter, Route, Routes } from "react-router-dom";
+import {
+  HashRouter,
+  MemoryRouter,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 import Home from "./pages/Home";
+import Notes from "./components/Notes";
+import UserInfo from "./pages/UserInfo";
+import Security from "./pages/Security";
+import FavouriteNotes from "./pages/FavouriteNotes";
 
 const App = () => {
   return (
@@ -14,10 +24,13 @@ const App = () => {
       <HashRouter>
         <Routes>
           <Route path="/" element={<Home />}>
-            <Route path="/" element={<div>Outlet</div>} />
+            <Route path="/" element={<Notes />} />
+            <Route path="/user-info" element={<UserInfo />} />
+            <Route path="/security" element={<Security />} />
+            <Route path="/notes/favourites" element={<FavouriteNotes />} />
+            <Route path="/notes/pinned" element={<FavouriteNotes />} />
           </Route>
           <Route path="*" element={<div>404 not found.</div>} />
-          {/* <Route path="/" element={<Home />} /> */}
         </Routes>
       </HashRouter>
     </div>
