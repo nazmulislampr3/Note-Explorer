@@ -56,73 +56,50 @@ export const createNote = asyncHandler(async (req, res) => {
   req.body.user = req.user?._id;
   const note = await new Note(req.body).save();
 
-  return res.json(organizeNotes(note));
+  return res.json({ note: organizeNotes(note), message: "New note created!" });
 });
 
-export const favouriteToggle = (type: "add" | "remove") => {
-  return asyncHandler(async (req, res) => {
-    const { id: noteId } = req.params;
-    const add = type === "add";
-    const remove = type === "remove";
-    const note = await Note.findById({
-      _id: noteId,
-      user: req.user!.id,
-    }).select("addedToFavouriteAt");
+export const favouriteToggle = asyncHandler(async (req, res) => {
+  const { id: noteId } = req.params;
+  const { addedToFavouriteAt } = req.body;
 
-    if (!note) {
-      throw new ApiError(400, "Invalid ID!");
-    }
+  const note = await Note.findById({
+    _id: noteId,
+    user: req.user!.id,
+  }).select("addedToFavouriteAt");
 
-    let addedToFavouriteAt = note.addedToFavouriteAt || null;
-    if (add) {
-      addedToFavouriteAt = addedToFavouriteAt || new Date();
-    } else if (remove) {
-      addedToFavouriteAt = null;
-    }
+  if (!note) {
+    throw new ApiError(400, "Invalid ID!");
+  }
 
-    note.addedToFavouriteAt = addedToFavouriteAt;
-    await note.save({ validateBeforeSave: false });
+  note.addedToFavouriteAt = addedToFavouriteAt;
+  await note.save({ validateBeforeSave: false });
 
-    return res.json({ typename: "note", id: noteId, addedToFavouriteAt });
-  });
-};
+  return res.json({ id: noteId, addedToFavouriteAt });
+});
 
-export const pinToggle = (type: "pin" | "unpin") => {
-  return asyncHandler(async (req, res) => {
-    const { id: noteId } = req.params;
-    const pin = type === "pin";
-    const unpin = type === "unpin";
+export const pinToggle = asyncHandler(async (req, res) => {
+  const { id: noteId } = req.params;
+  const { pinnedAt } = req.body;
+  const note = await Note.findOne({ _id: noteId, user: req.user!.id }).select(
+    "pinnedAt"
+  );
 
-    const note = await Note.findOne({ _id: noteId, user: req.user!.id }).select(
-      "pinnedAt"
-    );
+  if (!note) {
+    throw new ApiError(400, "Invalid ID!");
+  }
 
-    if (!note) {
-      throw new ApiError(400, "Invalid ID!");
-    }
+  note.pinnedAt = pinnedAt;
+  await note.save({ validateBeforeSave: false });
 
-    let pinnedAt = note.pinnedAt;
-
-    if (pin) {
-      pinnedAt = pinnedAt || new Date();
-    } else if (unpin) {
-      pinnedAt = null;
-    }
-
-    note.pinnedAt = pinnedAt;
-    await note.save({ validateBeforeSave: false });
-
-    return res.json({ typename: "note", id: noteId, pinnedAt });
-  });
-};
+  return res.json({ id: noteId, pinnedAt });
+});
 
 export const editNote = asyncHandler(async (req, res) => {
   const noteId = req.params.id;
 
-  console.log({ noteId });
-
   const editedNote = await Note.findOneAndUpdate(
-    { _id: noteId, user: req.user!.id },
+    { _id: noteId, user: req.user!._id },
     { $set: req.body },
     { new: true }
   );
@@ -131,14 +108,15 @@ export const editNote = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid entry!");
   }
 
-  return res.json(organizeNotes(editedNote));
+  return res.json({
+    note: organizeNotes(editedNote),
+    message: "Successfully updated note!",
+  });
 });
 
 export const deleteNote = asyncHandler(async (req, res) => {
   const { id: noteId } = req.params;
-  const response = await Note.deleteOne({ _id: noteId, user: req.user!.id });
+  await Note.deleteOne({ _id: noteId, user: req.user!.id });
 
-  console.log({ response });
-
-  return res.json({ id: noteId });
+  return res.json({ message: "The note has been deleted!" });
 });

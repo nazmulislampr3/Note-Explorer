@@ -16,10 +16,73 @@
 }
 
 @layer utilities {
+  * {
+    @apply disabled:opacity-70 disabled:pointer-events-none;
+  }
+
+  button,
+  label {
+    @apply cursor-pointer select-none;
+  }
+
+  .btn {
+    @apply px-3 py-1.5 rounded-md disabled:opacity-70;
+  }
+
+  .auth-form {
+    @apply bg-slate-800 w-full max-w-xl px-10 py-10;
+    h3 {
+      @apply text-center text-4xl font-bold;
+    }
+    form {
+      @apply mt-10;
+      .form-control-group {
+        @apply flex flex-col gap-3;
+      }
+    }
+    label {
+      @apply select-none;
+    }
+    input {
+      @apply outline-none;
+    }
+    .form-control {
+      label {
+        @apply text-lg font-bold;
+      }
+      input {
+        @apply w-full px-4 py-2 rounded-md outline-none bg-slate-600 mt-1 disabled:opacity-70 text-lg;
+      }
+    }
+    .error {
+      @apply flex gap-1.5 text-red-400 items-center mt-2;
+    }
+    .show-password {
+      @apply mt-3 flex gap-1.5;
+    }
+
+    button {
+      @apply bg-teal-500 px-7 py-3 rounded-sm w-full font-bold text-lg hover:bg-teal-600 disabled:opacity-70 disabled:pointer-events-none;
+    }
+    .redirect-link {
+      @apply text-lg text-center mt-3;
+      a {
+        @apply text-blue-400;
+      }
+    }
+  }
+  // Toastify
+  .toastify-item {
+    --translateX: 0px;
+    @apply translate-x-2 md:translate-x-20 translate-y-[250%];
+  }
+  .toastify-item-sm {
+    --translateX: 80px;
+  }
   // Custom scrollbar
   .scrollbar {
     &::-webkit-scrollbar {
-      @apply w-1;
+      @apply w-1 h-0 sm:h-1;
     }
     &::-webkit-scrollbar-track {
       box-shadow: inset 0 0 5px grey;
@@ -34,7 +97,7 @@
   // Sidebar
   .header {
     .search-bar-icon {
-      @apply h-10 aspect-square;
+      @apply h-full aspect-square;
       svg {
         @apply size-4/5 p-1.5 cursor-pointer m-auto font-bold;
       }
@@ -48,6 +111,61 @@
             @apply translate-y-0 -translate-x-0 opacity-100;
           }
         }
+      }
+    }
+  }
+  .note-item {
+    mark {
+      @apply bg-green-500;
+    }
+    .icons {
+      svg {
+        @apply p-1.5 size-8 transition-colors duration-300;
+        &:hover {
+          @apply bg-slate-700;
+        }
+      }
+    }
+  }
+  .note {
+    &.loading {
+      svg {
+        @apply stroke-slate-400 pointer-events-none;
+      }
+    }
+    svg {
+      @apply p-1.5 size-10 cursor-pointer transition-all duration-200 hover:bg-slate-700;
+      &.disabled {
+        @apply stroke-slate-500 pointer-events-none;
+      }
+    }
+
+    .title {
+      @apply pb-2 text-3xl font-bold border-b outline-0 bg-transparent;
+    }
+    .desc {
+      @apply text-lg w-full h-full bg-transparent outline-0 scrollbar;
+    }
+  }
+  .user-img-input {
+    svg {
+      @apply text-slate-100 absolute size-3/12;
+    }
+  }
+  .user-info {
+    .user-details {
+      input[type="text"] {
+        @apply w-full py-2 px-3 bg-slate-400 text-slate-800 font-bold outline-0 rounded-md;
+      }
+    }
+  }
+  .security {
+    .form-control {
+      label {
+        @apply text-lg;
+      }
+      input {
+        @apply px-3 py-1.5 bg-slate-500 w-full flex flex-col outline-0 mt-2 rounded-sm;
       }
     }
   }

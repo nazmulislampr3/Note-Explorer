@@ -10,10 +10,13 @@ import { MenuType } from "../types";
 import cn from "../utils/cn";
 import { useUIContext } from "../context/UIContext";
 import { useLocation, useNavigate } from "react-router";
+import useLogout from "../hooks/apiHooks/authHooks/useLogout";
 
 const Sidebar = () => {
   let { pathname } = useLocation();
   const navigate = useNavigate();
+
+  const [handleLogout] = useLogout();
 
   const menu: MenuType[][] = [
     [
@@ -50,6 +53,7 @@ const Sidebar = () => {
       {
         name: "Logout",
         Icon: LogOut,
+        fn: handleLogout,
       },
     ],
   ];

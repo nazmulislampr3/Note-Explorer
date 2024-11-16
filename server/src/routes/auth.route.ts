@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   accountRecoverySendOTP,
+  authorize,
   changePassword,
   getNewAccessToken,
   login,
@@ -27,6 +28,7 @@ import loginSchema from "./../validators/login.validator";
 import passwordSchema from "./../validators/password.validator";
 import registerSchema from "./../validators/register.validator";
 import userInfoSchema from "./../validators/userInfo.validator";
+import { uploadImage } from "./../controllers/upload.controller";
 
 const authRouter = Router();
 
@@ -36,23 +38,22 @@ const updateUserRouter = Router();
 const tokenRouter = Router();
 
 // Registration
-reigsterRouter.route("/").post(
-  (req, res, next) => {
-    req.body.birthdate = req.body.birthdate || new Date();
-    next();
-  },
-  validateData(registerSchema),
-  register
-);
+reigsterRouter.route("/").post(validateData(registerSchema), register);
 reigsterRouter.route("/verify-token/:token/:key").get(verifyRegisterToken);
-reigsterRouter.route("/resend-otp/:token/:key").get(resendOTP);
-reigsterRouter.route("/verify-otp/:token/:key/:otp").get(verifyOTP);
+reigsterRouter.route("/resend-otp/:token/:key").post(resendOTP);
+reigsterRouter.route("/verify-otp/:token/:key/:otp").post(verifyOTP);
+reigsterRouter
+  .route("/upload-avatar")
+  .post(imageUploader.single("avatar"), uploadImage("avatars"));
 
 // Login
 authRouter.route("/login").post(validateData(loginSchema), login);
 
+// authorize
+authRouter.route("/authorize").get(requireAuth, authorize);
+
 // token
-tokenRouter.route("/access-token").get(getNewAccessToken);
+tokenRouter.route("/refresh").get(getNewAccessToken);
 
 // Recover account
 accountRecoveryRouter
@@ -90,6 +91,6 @@ authRouter
   .use("/recover-account", accountRecoveryRouter)
   .use("/update", requireAuth, updateUserRouter)
   .use("/token", tokenRouter)
-  .use("/logout", logout);
+  .post("/logout", logout);
 
 export default authRouter;

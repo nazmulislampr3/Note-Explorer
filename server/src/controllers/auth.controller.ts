@@ -43,7 +43,11 @@ export const register = asyncHandler(async (req, res) => {
     html: await registerOTPMail({ otp, reciever: fname }),
   });
 
-  return res.json({ token: registerToken, key: registerKey });
+  // return res.json({ token: registerToken, key: registerKey });
+  return res.json({
+    redirectUrl: `/register/verify-otp/${registerToken}/${registerKey}`,
+    message: "OTP has been sent!",
+  });
 });
 
 export const verifyRegisterToken = asyncHandler(async (req, res) => {
@@ -89,24 +93,33 @@ export const verifyOTP = asyncHandler(async (req, res) => {
 
   await OtpOrToken.deleteOne({ registerToken: token, registerKey: key });
 
-  return res.json({ message: "User registration successfull." });
+  return res.json({
+    redirectUrl: `/login`,
+    message: "User registration successfull.",
+  });
 });
 
 export const resendOTP = asyncHandler(async (req, res) => {
   const { token, key }: any = req.params;
 
-  const { email }: any = jwt.verify(token, key);
+  const { email, fname }: any = jwt.verify(token, key);
 
   const otp = generateOTP();
 
   const { createdAt } = await new OtpOrToken({
-    token,
-    key,
+    registerToken: token,
+    registerKey: key,
     otp,
   }).save();
 
   let expiresAt = new Date(createdAt);
   expiresAt.setSeconds(expiresAt.getSeconds() + Number(process.env.OTP_EXPIRY));
+
+  await sendMail({
+    subject: "Account verification.",
+    to: email,
+    html: await registerOTPMail({ otp, reciever: fname }),
+  });
 
   return res.json({ expiresAt });
 });
@@ -137,7 +150,7 @@ export const login = asyncHandler(async (req, res) => {
 
   const options: CookieOptions = {
     httpOnly: true,
-    secure: true,
+    secure: false,
   };
 
   return res
@@ -154,6 +167,8 @@ export const login = asyncHandler(async (req, res) => {
       birthdate: birthdate || "",
     });
 });
+
+export const authorize = asyncHandler(async (req, res) => res.json(req.user));
 
 // token
 export const getNewAccessToken = asyncHandler(async (req, res) => {
@@ -209,7 +224,10 @@ export const logout = asyncHandler(async (req, res) => {
     ]);
   }
 
-  return res.clearCookie("accessToken").clearCookie("refreshToken").end();
+  return res
+    .clearCookie("accessToken")
+    .clearCookie("refreshToken")
+    .json({ message: "Logged out successfully!" });
 });
 
 // Account recovery

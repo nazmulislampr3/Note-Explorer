@@ -1,16 +1,23 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
 import App from "./App.tsx";
-import "./index.scss";
+import NotesContextProvider from "./context/NotesContext.tsx";
 import UIContextProvider from "./context/UIContext.tsx";
-import APIMemoProvider from "./context/APIContext.tsx";
+import "./index.scss";
+import store from "./redux/store.ts";
+import "./utils/axios.ts";
+import ToastContainer from "./utils/toastify/ToastContainer.tsx";
+import AuthProvider from "./context/AuthContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <UIContextProvider>
-      <APIMemoProvider>
-        <App />
-      </APIMemoProvider>
-    </UIContextProvider>
-  </StrictMode>
+  <AuthProvider>
+    <Provider store={store}>
+      <NotesContextProvider>
+        <UIContextProvider>
+          <ToastContainer />
+          <App />
+        </UIContextProvider>
+      </NotesContextProvider>
+    </Provider>
+  </AuthProvider>
 );

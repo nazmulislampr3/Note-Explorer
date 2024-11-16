@@ -20,8 +20,9 @@ const changePasswordSchema = z
     }
   )
   .refine(
-    ({ password, confirm_password }) =>
-      !password || !confirm_password || password === confirm_password,
+    ({ password, confirm_password }) => {
+      return password === confirm_password;
+    },
     {
       message: "Password must match with confirm password!",
     }

@@ -16,8 +16,8 @@ const port = process.env.PORT || 5000;
 //   })
 //   .catch(() => console.log("Mongodb connection failed!"));
 
-connectMongo();
-
-app.listen(port, () =>
-  console.log(`Server is running on http://localhost:${port}`)
-);
+connectMongo().then(() => {
+  app.listen(port, () =>
+    console.log(`Server is running on http://localhost:${port}`)
+  );
+});

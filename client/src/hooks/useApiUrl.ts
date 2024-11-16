@@ -1,5 +1,6 @@
 import { useParams } from "react-router";
 
+const authUrl = "/auth";
 const registerUrl = "/auth/register";
 const loginUrl = "/auth/login";
 const accoutnRecoverUrl = "/auth/account-recovery";
@@ -7,7 +8,7 @@ const updateUser = "/auth/update";
 const tokenUrl = "/auth/token";
 const notesUrl = "/notes";
 
-const userApiUrl = () => {
+const useApiUrl = () => {
   const { token, key, id } = useParams();
 
   const apiUrl = {
@@ -17,6 +18,7 @@ const userApiUrl = () => {
       resendOTP: `${registerUrl}/resend-otp/${token}/${key}`,
       verifyOTP: (otp: string) =>
         `${registerUrl}/verify-otp/${token}/${key}/${otp}`,
+      uploadAvatar: `${registerUrl}/upload-avatar`,
     },
     accountRecovery: {
       sendOTP: (email: string) =>
@@ -33,28 +35,29 @@ const userApiUrl = () => {
     login: {
       main: loginUrl,
     },
+    logout: `${authUrl}/logout`,
+    authorize: {
+      main: `${authUrl}/authorize`,
+    },
     user: {
       updateUser: `${updateUser}/user-info`,
       changePassword: `${updateUser}/password`,
       changeAvatar: `${updateUser}/avatar`,
     },
     token: {
-      accessToken: `${tokenUrl}/access-token`,
+      refresh: `${tokenUrl}/refresh`,
     },
     notes: {
       main: notesUrl,
       create: `${notesUrl}/create`,
-      addToFavourite: (noteId: string) =>
-        `${notesUrl}/add-to-favourite/${noteId}`,
-      removeFromFavourite: (noteId: string) =>
-        `${notesUrl}/remove-from-favourite/${noteId}`,
-      pin: (noteId: string) => `${notesUrl}/pin/${noteId}`,
-      unpin: (noteId: string) => `${notesUrl}/unpin/${noteId}`,
+      favouriteToggle: (id: string) => `${notesUrl}/favourite-toggle/${id}`,
+      pinToggle: (id: string) => `${notesUrl}/pin-toggle/${id}`,
       edit: `${notesUrl}/edit/${id}`,
+      delete: (id: string) => `${notesUrl}/delete/${id}`,
     },
   };
 
   return apiUrl;
 };
 
-export default userApiUrl;
+export default useApiUrl;

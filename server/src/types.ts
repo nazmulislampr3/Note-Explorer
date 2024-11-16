@@ -31,7 +31,6 @@ export type FileTypes = "image";
 export type ImageMimeType = "image/jpeg" | "image/jpg" | "image/png";
 
 export type NoteType = {
-  typename: string;
   id: any;
   title: string;
   desc: string;

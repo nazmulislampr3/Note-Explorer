@@ -1,5 +1,12 @@
+import AuthFormWrapper from "../../components/AuthFormWrapper";
+import RegisterForm from "../../components/RegisterForm";
+
 const Register = () => {
-  return <div>Register</div>;
+  return (
+    <AuthFormWrapper includeLogo={true}>
+      <RegisterForm />
+    </AuthFormWrapper>
+  );
 };
 
 export default Register;
