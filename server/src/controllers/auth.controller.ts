@@ -225,9 +225,18 @@ export const logout = asyncHandler(async (req, res) => {
     ]);
   }
 
+  const options: CookieOptions = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  };
+
   return res
-    .clearCookie("accessToken")
-    .clearCookie("refreshToken")
+    .clearCookie("accessToken", {
+      ...options,
+      maxAge: Number(process.env.JWT_ACCESS_TOKEN_EXPIRY) * 60 * 1000,
+    })
+    .clearCookie("refreshToken", options)
     .json({ message: "Logged out successfully!" });
 });
 
