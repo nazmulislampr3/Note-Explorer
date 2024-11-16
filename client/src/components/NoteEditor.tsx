@@ -63,7 +63,7 @@ const NoteEditor = ({ note }: { note?: NoteType }) => {
 
   const handleExit = () => {
     if (!loading) {
-      window.history.state?.idx > 1 ? window.history.back() : navigate("/");
+      navigate("/");
     }
   };
 
@@ -88,10 +88,10 @@ const NoteEditor = ({ note }: { note?: NoteType }) => {
   };
 
   return (
-    <BgLayer onClick={handleExit}>
+    <BgLayer>
       <div
         className={cn(
-          "note w-screen max-w-3xl bg-slate-900 h-[90vh] overflow-y-auto px-2 sm:px-5 border-4 border-slate-600 flex flex-col justify-between bg-cover bg-no-repeat bg-center m-auto",
+          "note w-screen max-w-3xl bg-slate-900 h-screen sm:h-[90vh] overflow-y-auto px-2 sm:px-5 sm:border-4 border-slate-600 flex flex-col justify-between bg-cover bg-no-repeat bg-center m-auto",
           {
             loading,
           }
