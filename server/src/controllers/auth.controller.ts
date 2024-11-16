@@ -151,7 +151,7 @@ export const login = asyncHandler(async (req, res) => {
   const options: CookieOptions = {
     httpOnly: true,
     secure: true,
-    sameSite: "strict",
+    sameSite: "none",
   };
 
   return res
