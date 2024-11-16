@@ -25,7 +25,7 @@ const useLoginForm = () => {
     {
       onRequestSucess(data) {
         setSession(data);
-        // window.location.href = "/";
+        window.location.href = "/";
       },
     }
   );

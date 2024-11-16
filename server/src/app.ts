@@ -12,6 +12,8 @@ const origin =
     ? process.env.CLIENT_URI_DEVELOPMENT
     : process.env.CLIENT_URI;
 
+console.log({ origin });
+
 app.use(cors({ origin, credentials: true }));
 app.use(cookieParser());
 
