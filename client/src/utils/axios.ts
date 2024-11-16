@@ -8,7 +8,7 @@ axios.interceptors.response.use(
   (response) => response,
   async (error) => {
     const requestConfig = error.config;
-    if (error.response.status === 401) {
+    if (error?.response?.status === 401) {
       try {
         await refreshToken();
         return axios(requestConfig);

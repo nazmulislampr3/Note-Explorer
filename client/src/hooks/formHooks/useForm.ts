@@ -49,10 +49,10 @@ const useForm = <FormDataType, ErrorType, ApiDataType = null>(
       const { data } = await axios.post(url, formData, {
         withCredentials: true,
       });
-      console.log({ data });
       setData(data);
       options?.onRequestSucess?.(data);
     } catch (error: any) {
+      alert(JSON.stringify(error));
       setError(error.response.data);
       options?.onError?.(error.response.data);
     } finally {
