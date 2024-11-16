@@ -1,9 +1,8 @@
 import { ImagePlus, LoaderCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { blankUser } from "../data/images";
 import useUploadAvatar from "../hooks/apiHooks/authHooks/useUploadAvatar";
-import cn from "../utils/cn";
 import { ApiErrorType } from "../types";
+import cn from "../utils/cn";
 import extractImageFromFile from "../utils/extractImageFromFile";
 
 type PropsType = JSX.IntrinsicElements["div"];

@@ -36,7 +36,7 @@ const useFavouriteToggle = (note: NoteType | null) => {
       );
     },
     onError(error) {
-      dispatch(updateNote({ id, addedToFavouriteAt: prevValue }));
+      dispatch(updateNote({ id: note?.id, addedToFavouriteAt: prevValue }));
       toastifyService.toastify(error.message, { type: "warning" });
     },
   });

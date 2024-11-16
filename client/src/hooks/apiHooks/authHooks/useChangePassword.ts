@@ -1,8 +1,4 @@
-import {
-  ApiErrorType,
-  ApiResponseDataType,
-  QueryOptionsType,
-} from "../../../types";
+import { ApiResponseDataType, QueryOptionsType } from "../../../types";
 import toastifyService from "../../../utils/toastify/service";
 import useApiUrl from "../../useApiUrl";
 import useMutation from "../useMutation";

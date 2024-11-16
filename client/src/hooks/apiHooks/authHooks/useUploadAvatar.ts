@@ -1,9 +1,8 @@
 import { useEffect } from "react";
-import useAuth from "./useAuth";
+import { useAuthContext } from "../../../context/AuthContext";
+import { ApiErrorType, QueryOptionsType } from "../../../types";
 import useApiUrl from "../../useApiUrl";
 import useMutation from "../useMutation";
-import { ApiErrorType, QueryOptionsType } from "../../../types";
-import { useAuthContext } from "../../../context/AuthContext";
 
 type ResponseType = {
   url: string;
