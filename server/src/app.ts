@@ -12,8 +12,6 @@ const origin =
     ? process.env.CLIENT_URI_DEVELOPMENT
     : process.env.CLIENT_URI;
 
-console.log({ origin });
-
 app.use(cors({ origin, credentials: true }));
 app.use(cookieParser());
 
@@ -25,7 +23,7 @@ app.use("/api/v1", routers);
 app.get(
   "/",
   asyncHandler(async (req, res) => {
-    return res.status(200).json({ testJson: true });
+    return res.status(200).json({ testJson: true, origin });
   })
 );
 
