@@ -90,7 +90,8 @@ authRouter
   .use("/register", reigsterRouter)
   .use("/recover-account", accountRecoveryRouter)
   .use("/update", requireAuth, updateUserRouter)
-  .use("/token", tokenRouter)
-  .post("/logout", logout);
+  .use("/token", tokenRouter);
+
+authRouter.route("/logout").post(logout);
 
 export default authRouter;
