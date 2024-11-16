@@ -12,8 +12,6 @@ const origin =
     ? process.env.CLIENT_URI_DEVELOPMENT
     : process.env.CLIENT_URI;
 
-console.log({ origin });
-
 app.use(cors({ origin, credentials: true }));
 app.use(cookieParser());
 
@@ -22,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1", routers);
 
-app.post(
+app.get(
   "/",
   asyncHandler(async (req, res) => {
     return res.status(200).json({ testJson: true });
