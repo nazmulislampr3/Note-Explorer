@@ -5,7 +5,7 @@ const ToastContainer = () => {
   const toasts = useToastify();
   return (
     <div>
-      {toasts.map((item, index) => {
+      {toasts.reverse().map((item, index) => {
         return <ToastItem toast={item} index={index} key={item.id} />;
       })}
     </div>

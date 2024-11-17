@@ -52,7 +52,7 @@ const ToastItem = ({ toast, index }: { toast: ToastType; index: number }) => {
   return (
     <div
       className={cn(
-        "toastify-item sm:toastify-item-sm w-full sm:w-auto sm:min-w-96 fixed z-[9999] py-2 sm:py-4 px-3 sm:px-4 shadow-xl shadow-slate-800 flex justify-between items-center gap-5 bottom-4 sm:bottom-10 transition-all duration-300",
+        "toastify-item sm:toastify-item-sm w-full sm:w-[30rem] fixed z-[9999] py-2 sm:py-4 px-3 sm:px-4 shadow-xl shadow-slate-800 flex justify-between items-center gap-5 bottom-4 sm:bottom-10 transition-all duration-300 whitespace-nowrap",
         {
           "bg-sky-600": success,
           "bg-red-500": warning,
@@ -65,7 +65,7 @@ const ToastItem = ({ toast, index }: { toast: ToastType; index: number }) => {
                 ? `translateX(var(--translateX)) translateY(250%)`
                 : !hidden
                 ? `translateX(var(--translateX)) translateY(-${
-                    100 * index * 1.3
+                    100 * index * 1.8
                   }%)`
                 : `translateX(-110%) translateY(-${100 * index * 1.3}%)`,
             }
